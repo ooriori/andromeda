@@ -2,82 +2,131 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Empanada Personalizada | Andrómeda</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Andrómeda ofrece frituras auténticas, empanadas, yaniqueques, desayunos y más en Constanza. Hacemos entregas a domicilio.">
+  <meta name="keywords" content="frituras, Constanza, empanadas, yaniqueques, desayunos, jugos, comida dominicana">
+  <meta name="author" content="Andrómeda">
+  <title>Andrómeda | Frituras en Constanza</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .empanada-form-container {
-      background-color: #111;
-      color: #fff;
-      padding: 1.5rem;
-      margin: 2rem auto;
-      border-radius: 10px;
-      max-width: 420px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .empanada-form label {
-      margin: 0.3em 0;
-      display: block;
-    }
-
-    .empanada-form button {
-      margin-top: 1em;
-      padding: 0.6em 1em;
-      background: #ffcc00;
-      border: none;
-      border-radius: 5px;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .empanada-form button:hover {
-      background: #e6b800;
+    body {
+      font-family: 'Arial', sans-serif;
     }
   </style>
 </head>
 <body class="bg-white text-black">
 
-  <div class="empanada-form-container">
-    <form class="empanada-form">
-      <h2 class="text-xl font-semibold mb-4">¡Crea tu empanada personalizada!</h2>
+  <!-- Encabezado -->
+  <header class="bg-black text-white p-6 text-center shadow-md">
+    <h1 class="text-3xl font-bold">Andrómeda</h1>
+    <p class="text-sm mt-1">Frituras auténticas desde Constanza</p>
+  </header>
 
-      <label>Tipo de masa:</label>
-      <select name="masa" required class="text-black px-2 py-1 rounded w-full">
-        <option value="Harina de trigo">Harina de trigo</option>
-        <option value="Yuca">Yuca</option>
-        <option value="Plátano">Plátano</option>
-      </select>
+  <!-- Horario -->
+  <section class="p-6 text-center transition-all duration-500 hover:scale-105">
+    <h2 class="text-xl font-semibold mb-2">Horario</h2>
+    <p>Mañana: 7:00 AM - 12:00 PM</p>
+    <p>Tarde: 2:00 PM - 9:00 PM</p>
+  </section>
 
-      <br>
-      <label>Rellenos:</label>
-      <label><input type="checkbox" name="relleno" value="Queso"> Queso</label>
-      <label><input type="checkbox" name="relleno" value="Pollo"> Pollo</label>
-      <label><input type="checkbox" name="relleno" value="Jamón"> Jamón</label>
-      <label><input type="checkbox" name="relleno" value="Salami"> Salami</label>
+ <!-- Menú del día -->
+<section class="p-6">
+  <h2 class="text-xl font-semibold text-center mb-4">Menú del Día</h2>
 
-      <br>
-      <label>Salsas:</label>
-      <label><input type="checkbox" name="salsa" value="Mayonesa"> Mayonesa</label>
-      <label><input type="checkbox" name="salsa" value="Ketchup"> Ketchup</label>
-      <label><input type="checkbox" name="salsa" value="Mostaza"> Mostaza</label>
+  <!-- Contenedor colapsable -->
+  <div id="menu-list" class="max-h-72 overflow-hidden transition-all duration-500">
+    <div class="flex flex-col items-center space-y-4">
 
-      <button type="submit">Enviar pedido</button>
-    </form>
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🥟</span>
+        <span>Empanadas</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍘</span>
+        <span>Yaniqueques</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍖</span>
+        <span>Frituras con salami</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🥔</span>
+        <span>Bollitos de yuca</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🔥</span>
+        <span>Azados</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍳</span>
+        <span>Desayunos</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍹</span>
+        <span>Jugos naturales</span>
+      </div>
+
+    </div>
   </div>
 
-  <script>
-    document.querySelector('.empanada-form').addEventListener('submit', function(e) {
-      e.preventDefault();
+  <!-- Botón para expandir -->
+  <div class="text-center mt-4">
+    <button onclick="toggleMenu()" id="menu-toggle" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+      Ver más
+    </button>
+  </div>
+</section>
 
-      const masa = this.masa.value;
-      const rellenos = [...this.querySelectorAll('input[name="relleno"]:checked')].map(cb => cb.value);
-      const salsas = [...this.querySelectorAll('input[name="salsa"]:checked')].map(cb => cb.value);
+<!-- Script para mostrar/ocultar -->
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("menu-list");
+    const button = document.getElementById("menu-toggle");
 
-      alert(`Empanada con:\nMasa: ${masa}\nRellenos: ${rellenos.join(", ") || "ninguno"}\nSalsas: ${salsas.join(", ") || "ninguna"}`);
-    });
-  </script>
+    if (menu.classList.contains("max-h-72")) {
+      menu.classList.remove("max-h-72");
+      menu.classList.add("max-h-[1000px]");
+      button.innerText = "Ver menos";
+    } else {
+      menu.classList.remove("max-h-[1000px]");
+      menu.classList.add("max-h-72");
+      button.innerText = "Ver más";
+    }
+  }
+</script>
+
+
+  <!-- Delivery info -->
+  <section class="p-6 text-center">
+    <h2 class="text-xl font-semibold mb-2">Entregas a Domicilio</h2>
+    <p>🚚 ¡Entregamos en todo Constanza!</p>
+  </section>
+
+  <!-- Redes y pedidos -->
+  <section class="p-6 text-center space-y-4">
+    <a href="https://instagram.com/andromeda_constanza" target="_blank" rel="noopener noreferrer" class="text-blue-500 underline">
+      📸 Ver menú diario en Instagram
+    </a>
+
+    <br>
+
+    <a href="https://wa.me/+8093614432?text=Hola%20Andrómeda,%20quiero%20hacer%20un%20pedido" target="_blank" class="inline-block bg-black text-white px-6 py-3 rounded-full shadow-lg hover:bg-gray-800 transition">
+      🛒 Hacer pedido por WhatsApp
+    </a>
+
+    <p class="text-sm mt-2 text-gray-600">Respuestas rápidas. Servicio personalizado.</p>
+  </section>
+
+  <!-- Pie de página -->
+  <footer class="bg-black text-white p-4 text-center text-sm">
+    <p>&copy; 2025 Andrómeda. Todos los derechos reservados.</p>
+  </footer>
 
 </body>
 </html>
