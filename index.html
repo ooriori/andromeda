@@ -29,20 +29,78 @@
     <p>Tarde: 2:00 PM - 9:00 PM</p>
   </section>
 
-  <!-- Menú del día -->
  <!-- Menú del día -->
 <section class="p-6">
-  <h2 class="text-xl font-semibold text-center mb-6">Menú del Día</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    <div class="bg-black text-white p-4 rounded shadow text-center">Empanadas</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Yaniqueques</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Frituras con salami</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Bollitos de yuca</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Azados</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Desayunos</div>
-    <div class="bg-black text-white p-4 rounded shadow text-center">Jugos naturales</div>
+  <h2 class="text-xl font-semibold text-center mb-4">Menú del Día</h2>
+
+  <!-- Contenedor colapsable -->
+  <div id="menu-list" class="max-h-72 overflow-hidden transition-all duration-500">
+    <div class="flex flex-col items-center space-y-4">
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🥟</span>
+        <span>Empanadas</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍘</span>
+        <span>Yaniqueques</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍖</span>
+        <span>Frituras con salami</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🥔</span>
+        <span>Bollitos de yuca</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🔥</span>
+        <span>Azados</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍳</span>
+        <span>Desayunos</span>
+      </div>
+
+      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
+        <span class="text-2xl">🍹</span>
+        <span>Jugos naturales</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Botón para expandir -->
+  <div class="text-center mt-4">
+    <button onclick="toggleMenu()" id="menu-toggle" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+      Ver más
+    </button>
   </div>
 </section>
+
+<!-- Script para mostrar/ocultar -->
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("menu-list");
+    const button = document.getElementById("menu-toggle");
+
+    if (menu.classList.contains("max-h-72")) {
+      menu.classList.remove("max-h-72");
+      menu.classList.add("max-h-[1000px]");
+      button.innerText = "Ver menos";
+    } else {
+      menu.classList.remove("max-h-[1000px]");
+      menu.classList.add("max-h-72");
+      button.innerText = "Ver más";
+    }
+  }
+</script>
+
 
   <!-- Delivery info -->
   <section class="p-6 text-center">
