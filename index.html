@@ -6,127 +6,813 @@
   <meta name="description" content="Andrómeda ofrece frituras auténticas, empanadas, yaniqueques, desayunos y más en Constanza. Hacemos entregas a domicilio.">
   <meta name="keywords" content="frituras, Constanza, empanadas, yaniqueques, desayunos, jugos, comida dominicana">
   <meta name="author" content="Andrómeda">
-  <title>Andrómeda | Frituras en Constanza</title>
+  <title>Andrómeda | Frituras Auténticas en Constanza</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glass-effect {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .hover-lift {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .menu-card {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      box-shadow: 20px 20px 40px #d9d9d9, -20px -20px 40px #ffffff;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      margin: 15% auto;
+      padding: 0;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1001;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
     }
   </style>
 </head>
-<body class="bg-white text-black">
+<body class="bg-gray-50">
 
-  <!-- Encabezado -->
-  <header class="bg-black text-white p-6 text-center shadow-md">
-    <h1 class="text-3xl font-bold">Andrómeda</h1>
-    <p class="text-sm mt-1">Frituras auténticas desde Constanza</p>
-  </header>
+  <!-- Notification -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span id="notification-text">¡Mensaje enviado!</span>
+  </div>
 
-  <!-- Horario -->
-  <section class="p-6 text-center transition-all duration-500 hover:scale-105">
-    <h2 class="text-xl font-semibold mb-2">Horario</h2>
-    <p>Mañana: 7:00 AM - 12:00 PM</p>
-    <p>Tarde: 2:00 PM - 9:00 PM</p>
+  <!-- Navigation -->
+  <nav class="fixed w-full top-0 z-50 glass-effect">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="text-2xl font-bold gradient-text">Andrómeda</div>
+        <div class="hidden md:flex space-x-6">
+          <a href="#menu" class="text-gray-700 hover:text-purple-600 transition">Menú</a>
+          <a href="#delivery" class="text-gray-700 hover:text-purple-600 transition">Delivery</a>
+          <a href="#contact" class="text-gray-700 hover:text-purple-600 transition">Contacto</a>
+          <button onclick="showAdminLogin()" class="text-gray-700 hover:text-purple-600 transition">Admin</button>
+        </div>
+        <div class="md:hidden">
+          <button onclick="toggleMobileMenu()" class="text-gray-700">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden mt-4 hidden">
+        <a href="#menu" class="block py-2 text-gray-700 hover:text-purple-600 transition">Menú</a>
+        <a href="#delivery" class="block py-2 text-gray-700 hover:text-purple-600 transition">Delivery</a>
+        <a href="#contact" class="block py-2 text-gray-700 hover:text-purple-600 transition">Contacto</a>
+        <button onclick="showAdminLogin()" class="block py-2 text-gray-700 hover:text-purple-600 transition text-left">Admin</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="gradient-bg min-h-screen flex items-center justify-center text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="animate-float absolute top-20 left-20 text-6xl">🥟</div>
+      <div class="animate-float absolute top-40 right-20 text-4xl" style="animation-delay: -1s;">🍳</div>
+      <div class="animate-float absolute bottom-40 left-40 text-5xl" style="animation-delay: -2s;">🍹</div>
+    </div>
+    <div class="text-center z-10 px-6">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-float">Andrómeda</h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90">Frituras auténticas desde Constanza</p>
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <div class="bg-white bg-opacity-20 px-6 py-3 rounded-full">
+            <i class="fas fa-clock mr-2"></i>7:00 AM - 12:00 PM | 2:00 PM - 9:00 PM
+          </div>
+        </div>
+        <button onclick="showOrderModal()" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transition">
+          <i class="fas fa-shopping-cart mr-2"></i>¡Haz tu pedido!
+        </button>
+      </div>
+    </div>
   </section>
 
- <!-- Menú del día -->
-<section class="p-6">
-  <h2 class="text-xl font-semibold text-center mb-4">Menú del Día</h2>
+  <!-- Menu Section -->
+  <section id="menu" class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Nuestro Menú</h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🥟</div>
+            <h3 class="text-xl font-semibold mb-2">Empanadas</h3>
+            <p class="text-gray-600 mb-4">Crujientes y doraditas, rellenas con los mejores ingredientes</p>
+            <button onclick="addToOrder('Empanadas', 50)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $50
+            </button>
+          </div>
+        </div>
 
-  <!-- Contenedor colapsable -->
-  <div id="menu-list" class="max-h-72 overflow-hidden transition-all duration-500">
-    <div class="flex flex-col items-center space-y-4">
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🍘</div>
+            <h3 class="text-xl font-semibold mb-2">Yaniqueques</h3>
+            <p class="text-gray-600 mb-4">Tradicionales y auténticos, perfectos para cualquier momento</p>
+            <button onclick="addToOrder('Yaniqueques', 30)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $30
+            </button>
+          </div>
+        </div>
 
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🥟</span>
-        <span>Empanadas</span>
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🍖</div>
+            <h3 class="text-xl font-semibold mb-2">Frituras con Salami</h3>
+            <p class="text-gray-600 mb-4">Sabrosas frituras acompañadas de salami fresco</p>
+            <button onclick="addToOrder('Frituras con Salami', 75)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $75
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🥔</div>
+            <h3 class="text-xl font-semibold mb-2">Bollitos de Yuca</h3>
+            <p class="text-gray-600 mb-4">Suaves por dentro, crujientes por fuera</p>
+            <button onclick="addToOrder('Bollitos de Yuca', 40)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $40
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🔥</div>
+            <h3 class="text-xl font-semibold mb-2">Asados</h3>
+            <p class="text-gray-600 mb-4">Perfectamente asados con nuestro toque especial</p>
+            <button onclick="addToOrder('Asados', 80)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $80
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🍳</div>
+            <h3 class="text-xl font-semibold mb-2">Desayunos</h3>
+            <p class="text-gray-600 mb-4">Completos y deliciosos para empezar el día</p>
+            <button onclick="addToOrder('Desayunos', 120)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $120
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-card p-6 rounded-3xl hover-lift">
+          <div class="text-center">
+            <div class="text-6xl mb-4">🍹</div>
+            <h3 class="text-xl font-semibold mb-2">Jugos Naturales</h3>
+            <p class="text-gray-600 mb-4">Frescos, naturales y llenos de sabor</p>
+            <button onclick="addToOrder('Jugos Naturales', 60)" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Agregar - $60
+            </button>
+          </div>
+        </div>
+
       </div>
+    </div>
+  </section>
 
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🍘</span>
-        <span>Yaniqueques</span>
+  <!-- Delivery Section -->
+  <section id="delivery" class="gradient-bg py-20 text-white">
+    <div class="container mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold mb-8">Entregas a Domicilio</h2>
+      <div class="text-8xl mb-8 animate-float">🚚</div>
+      <p class="text-xl mb-8">¡Entregamos en todo Constanza!</p>
+      <div class="grid md:grid-cols-3 gap-8 mt-12">
+        <div class="glass-effect p-6 rounded-2xl">
+          <i class="fas fa-clock text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Entrega Rápida</h3>
+          <p>30-45 minutos promedio</p>
+        </div>
+        <div class="glass-effect p-6 rounded-2xl">
+          <i class="fas fa-shield-alt text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Calidad Garantizada</h3>
+          <p>Productos frescos y calientes</p>
+        </div>
+        <div class="glass-effect p-6 rounded-2xl">
+          <i class="fas fa-map-marker-alt text-4xl mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Cobertura Total</h3>
+          <p>Todo Constanza y alrededores</p>
+        </div>
       </div>
+    </div>
+  </section>
 
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🍖</span>
-        <span>Frituras con salami</span>
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 px-6">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-bold mb-16 gradient-text">¿Listo para Ordenar?</h2>
+      <div class="space-y-6">
+        <a href="https://instagram.com/andromeda_constanza" target="_blank" rel="noopener noreferrer" 
+           class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover-lift">
+          <i class="fab fa-instagram mr-2"></i>Ver menú diario en Instagram
+        </a>
+        
+        <div class="mt-8">
+          <button onclick="showOrderModal()" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-semibold mr-4">
+            <i class="fas fa-shopping-cart mr-2"></i>Hacer Pedido
+          </button>
+          
+          <a href="https://wa.me/+8093614432?text=Hola%20Andrómeda,%20quiero%20hacer%20un%20pedido" target="_blank" 
+             class="inline-block bg-green-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 transition">
+            <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+          </a>
+        </div>
+        
+        <p class="text-gray-600 mt-6">Respuestas rápidas. Servicio personalizado.</p>
       </div>
+    </div>
+  </section>
 
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🥔</span>
-        <span>Bollitos de yuca</span>
+  <!-- Order Modal -->
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <div class="gradient-bg p-6 rounded-t-2xl text-white">
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-bold">Tu Pedido</h3>
+          <button onclick="closeOrderModal()" class="text-white hover:text-gray-300 text-2xl">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
-
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🔥</span>
-        <span>Azados</span>
+      <div class="p-6">
+        <div id="orderItems" class="space-y-4 mb-6">
+          <p class="text-gray-500 text-center">No hay productos agregados</p>
+        </div>
+        <div class="border-t pt-4">
+          <div class="flex justify-between items-center text-xl font-bold mb-4">
+            <span>Total: $<span id="orderTotal">0</span></span>
+          </div>
+          <div class="space-y-4">
+            <input type="text" id="customerName" placeholder="Tu nombre" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <input type="text" id="customerPhone" placeholder="Tu teléfono" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <textarea id="customerAddress" placeholder="Dirección de entrega" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 h-24 resize-none"></textarea>
+            <button onclick="sendOrder()" class="w-full btn-primary text-white py-3 rounded-lg text-lg font-semibold">
+              <i class="fab fa-whatsapp mr-2"></i>Enviar pedido por WhatsApp
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🍳</span>
-        <span>Desayunos</span>
-      </div>
-
-      <div class="bg-black text-white p-4 rounded shadow w-full max-w-md flex items-center space-x-4">
-        <span class="text-2xl">🍹</span>
-        <span>Jugos naturales</span>
-      </div>
-
     </div>
   </div>
 
-  <!-- Botón para expandir -->
-  <div class="text-center mt-4">
-    <button onclick="toggleMenu()" id="menu-toggle" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
-      Ver más
-    </button>
+  <!-- Admin Login Modal -->
+  <div id="adminModal" class="modal">
+    <div class="modal-content">
+      <div class="gradient-bg p-6 rounded-t-2xl text-white">
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-bold">Acceso Administrativo</h3>
+          <button onclick="closeAdminModal()" class="text-white hover:text-gray-300 text-2xl">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-6">
+        <div class="space-y-4">
+          <input type="text" id="adminUser" placeholder="Usuario" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <input type="password" id="adminPass" placeholder="Contraseña" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <button onclick="adminLogin()" class="w-full btn-primary text-white py-3 rounded-lg text-lg font-semibold">
+            <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
 
-<!-- Script para mostrar/ocultar -->
-<script>
-  function toggleMenu() {
-    const menu = document.getElementById("menu-list");
-    const button = document.getElementById("menu-toggle");
-
-    if (menu.classList.contains("max-h-72")) {
-      menu.classList.remove("max-h-72");
-      menu.classList.add("max-h-[1000px]");
-      button.innerText = "Ver menos";
-    } else {
-      menu.classList.remove("max-h-[1000px]");
-      menu.classList.add("max-h-72");
-      button.innerText = "Ver más";
-    }
-  }
-</script>
-
-
-  <!-- Delivery info -->
-  <section class="p-6 text-center">
-    <h2 class="text-xl font-semibold mb-2">Entregas a Domicilio</h2>
-    <p>🚚 ¡Entregamos en todo Constanza!</p>
-  </section>
-
-  <!-- Redes y pedidos -->
-  <section class="p-6 text-center space-y-4">
-    <a href="https://instagram.com/andromeda_constanza" target="_blank" rel="noopener noreferrer" class="text-blue-500 underline">
-      📸 Ver menú diario en Instagram
-    </a>
-
-    <br>
-
-    <a href="https://wa.me/+8093614432?text=Hola%20Andrómeda,%20quiero%20hacer%20un%20pedido" target="_blank" class="inline-block bg-black text-white px-6 py-3 rounded-full shadow-lg hover:bg-gray-800 transition">
-      🛒 Hacer pedido por WhatsApp
-    </a>
-
-    <p class="text-sm mt-2 text-gray-600">Respuestas rápidas. Servicio personalizado.</p>
-  </section>
-
-  <!-- Pie de página -->
-  <footer class="bg-black text-white p-4 text-center text-sm">
-    <p>&copy; 2025 Andrómeda. Todos los derechos reservados.</p>
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4 gradient-text">Andrómeda</h3>
+          <p class="text-gray-400">Frituras auténticas desde Constanza. Calidad y sabor en cada bocado.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Horarios</h4>
+          <p class="text-gray-400">Mañana: 7:00 AM - 12:00 PM</p>
+          <p class="text-gray-400">Tarde: 2:00 PM - 9:00 PM</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+          <p class="text-gray-400">📱 809-361-4432</p>
+          <p class="text-gray-400">📍 Constanza, República Dominicana</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 Andrómeda. Todos los derechos reservados.</p>
+      </div>
+    </div>
   </footer>
+
+  <!-- ChatBot Widget -->
+  <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
+    <button onclick="toggleChat()" class="btn-primary text-white w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition flex items-center justify-center">
+      <i class="fas fa-comments text-xl"></i>
+    </button>
+    <div id="chatBox" class="hidden absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl border">
+      <div class="gradient-bg p-4 rounded-t-2xl text-white">
+        <div class="flex justify-between items-center">
+          <h4 class="font-semibold">Asistente Andrómeda</h4>
+          <button onclick="toggleChat()" class="text-white hover:text-gray-300">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="space-y-3 mb-4 max-h-60 overflow-y-auto" id="chatMessages">
+          <div class="bg-gray-100 p-3 rounded-lg">
+            <p class="text-sm">¡Hola! Soy el asistente de Andrómeda. ¿En qué puedo ayudarte?</p>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." class="flex-1 p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <button onclick="sendChatMessage()" class="btn-primary text-white p-2 rounded-lg">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Order system
+    let currentOrder = [];
+    let orderTotal = 0;
+
+    function addToOrder(item, price) {
+      const existingItem = currentOrder.find(order => order.name === item);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        currentOrder.push({ name: item, price: price, quantity: 1 });
+      }
+      updateOrderTotal();
+      showNotification(`${item} agregado al pedido`);
+    }
+
+    function removeFromOrder(index) {
+      currentOrder.splice(index, 1);
+      updateOrderTotal();
+      displayOrderItems();
+    }
+
+    function updateOrderTotal() {
+      orderTotal = currentOrder.reduce((total, item) => total + (item.price * item.quantity), 0);
+      document.getElementById('orderTotal').textContent = orderTotal;
+      displayOrderItems();
+    }
+
+    function displayOrderItems() {
+      const container = document.getElementById('orderItems');
+      if (currentOrder.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">No hay productos agregados</p>';
+        return;
+      }
+
+      container.innerHTML = currentOrder.map((item, index) => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+          <div>
+            <span class="font-semibold">${item.name}</span>
+            <span class="text-gray-600 ml-2">x${item.quantity}</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="font-semibold">$${item.price * item.quantity}</span>
+            <button onclick="removeFromOrder(${index})" class="text-red-500 hover:text-red-700">
+              <i class="fas fa-trash text-sm"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function sendOrder() {
+      const name = document.getElementById('customerName').value;
+      const phone = document.getElementById('customerPhone').value;
+      const address = document.getElementById('customerAddress').value;
+
+      if (!name || !phone || !address || currentOrder.length === 0) {
+        showNotification('Por favor completa todos los campos y agrega productos', 'error');
+        return;
+      }
+
+      let message = `*NUEVO PEDIDO - ANDRÓMEDA*\n\n`;
+      message += `👤 *Cliente:* ${name}\n`;
+      message += `📱 *Teléfono:* ${phone}\n`;
+      message += `📍 *Dirección:* ${address}\n\n`;
+      message += `🛒 *PRODUCTOS:*\n`;
+      
+      currentOrder.forEach(item => {
+        message += `• ${item.name} x${item.quantity} - $${item.price * item.quantity}\n`;
+      });
+      
+      message += `\n💰 *TOTAL: $${orderTotal}*\n\n`;
+      message += `¡Gracias por elegir Andrómeda! 🥟`;
+
+      const whatsappUrl = `https://wa.me/+8093614432?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+      
+      // Reset order
+      currentOrder = [];
+      orderTotal = 0;
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerPhone').value = '';
+      document.getElementById('customerAddress').value = '';
+      updateOrderTotal();
+      closeOrderModal();
+      showNotification('¡Pedido enviado! Te contactaremos pronto');
+    }
+
+    // Modal functions
+    function showOrderModal() {
+      document.getElementById('orderModal').classList.add('show');
+      displayOrderItems();
+    }
+
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.remove('show');
+    }
+
+    function showAdminLogin() {
+      document.getElementById('adminModal').classList.add('show');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('show');
+    }
+
+    function adminLogin() {
+      const user = document.getElementById('adminUser').value;
+      const pass = document.getElementById('adminPass').value;
+      
+      // Simple admin check (en producción esto debería ser más seguro)
+      if (user === 'admin' && pass === 'andromeda2025') {
+        showNotification('¡Bienvenido administrador!');
+        closeAdminModal();
+        // Aquí podrías mostrar panel de admin
+        showNotification('Panel de administración en desarrollo');
+      } else {
+        showNotification('Credenciales incorrectas', 'error');
+      }
+    }
+
+    // Notification system
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const text = document.getElementById('notification-text');
+      
+      text.textContent = message;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Mobile menu
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Chat system
+    function toggleChat() {
+      const chatBox = document.getElementById('chatBox');
+      chatBox.classList.toggle('hidden');
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      const chatMessages = document.getElementById('chatMessages');
+      
+      // Add user message
+      chatMessages.innerHTML += `
+        <div class="text-right">
+          <div class="bg-purple-500 text-white p-3 rounded-lg inline-block max-w-xs">
+            <p class="text-sm">${message}</p>
+          </div>
+        </div>
+      `;
+      
+      // Simple bot responses
+      setTimeout(() => {
+        let botResponse = "¡Gracias por tu mensaje! ";
+        
+        if (message.toLowerCase().includes('horario')) {
+          botResponse = "🕐 Nuestros horarios son: Mañana 7:00 AM - 12:00 PM y Tarde 2:00 PM - 9:00 PM";
+        } else if (message.toLowerCase().includes('precio')) {
+          botResponse = "💰 Nuestros precios van desde $30 los yaniqueques hasta $120 los desayunos completos. ¿Te interesa algo en particular?";
+        } else if (message.toLowerCase().includes('delivery') || message.toLowerCase().includes('entrega')) {
+          botResponse = "🚚 ¡Sí! Hacemos entregas a domicilio en todo Constanza. El tiempo promedio es 30-45 minutos.";
+        } else if (message.toLowerCase().includes('menu') || message.toLowerCase().includes('menú')) {
+          botResponse = "📋 Tenemos empanadas, yaniqueques, frituras con salami, bollitos de yuca, asados, desayunos y jugos naturales. ¡Todo delicioso!";
+        } else {
+          botResponse += "¿Te gustaría hacer un pedido o necesitas información sobre nuestros productos?";
+        }
+        
+        chatMessages.innerHTML += `
+          <div class="bg-gray-100 p-3 rounded-lg">
+            <p class="text-sm">${botResponse}</p>
+          </div>
+        `;
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+      
+      input.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+      const orderModal = document.getElementById('orderModal');
+      const adminModal = document.getElementById('adminModal');
+      
+      if (e.target === orderModal) {
+        closeOrderModal();
+      }
+      if (e.target === adminModal) {
+        closeAdminModal();
+      }
+    });
+
+    // Handle Enter key for chat
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    });
+
+    // Handle Enter key for admin login
+    document.getElementById('adminPass').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        adminLogin();
+      }
+    });
+
+    // Add loading animation for buttons
+    function addLoadingToButton(buttonElement) {
+      const originalText = buttonElement.innerHTML;
+      buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';
+      buttonElement.disabled = true;
+      
+      setTimeout(() => {
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+      }, 2000);
+    }
+
+    // Enhanced order system with localStorage alternative (using variables)
+    let orderHistory = [];
+    let customerData = {};
+
+    function saveCustomerData(name, phone, address) {
+      customerData = { name, phone, address };
+    }
+
+    function loadCustomerData() {
+      if (customerData.name) {
+        document.getElementById('customerName').value = customerData.name;
+        document.getElementById('customerPhone').value = customerData.phone;
+        document.getElementById('customerAddress').value = customerData.address;
+      }
+    }
+
+    // Initialize customer data loading when opening order modal
+    const originalShowOrderModal = showOrderModal;
+    showOrderModal = function() {
+      originalShowOrderModal();
+      loadCustomerData();
+    };
+
+    // Enhanced sendOrder with customer data saving
+    const originalSendOrder = sendOrder;
+    sendOrder = function() {
+      const name = document.getElementById('customerName').value;
+      const phone = document.getElementById('customerPhone').value;
+      const address = document.getElementById('customerAddress').value;
+
+      if (!name || !phone || !address || currentOrder.length === 0) {
+        showNotification('Por favor completa todos los campos y agrega productos', 'error');
+        return;
+      }
+
+      // Save customer data for future orders
+      saveCustomerData(name, phone, address);
+      
+      // Add to order history
+      orderHistory.push({
+        date: new Date().toLocaleString(),
+        items: [...currentOrder],
+        total: orderTotal,
+        customer: { name, phone, address }
+      });
+
+      originalSendOrder();
+    };
+
+    // Add quantity controls to order items
+    function changeQuantity(index, change) {
+      if (currentOrder[index]) {
+        currentOrder[index].quantity += change;
+        if (currentOrder[index].quantity <= 0) {
+          removeFromOrder(index);
+        } else {
+          updateOrderTotal();
+        }
+      }
+    }
+
+    // Update displayOrderItems to include quantity controls
+    const originalDisplayOrderItems = displayOrderItems;
+    displayOrderItems = function() {
+      const container = document.getElementById('orderItems');
+      if (currentOrder.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">No hay productos agregados</p>';
+        return;
+      }
+
+      container.innerHTML = currentOrder.map((item, index) => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+          <div class="flex-1">
+            <span class="font-semibold">${item.name}</span>
+            <div class="text-sm text-gray-600">${item.price} c/u</div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2">
+              <button onclick="changeQuantity(${index}, -1)" class="w-6 h-6 bg-purple-500 text-white rounded-full text-xs hover:bg-purple-600 transition">-</button>
+              <span class="font-semibold w-8 text-center">${item.quantity}</span>
+              <button onclick="changeQuantity(${index}, 1)" class="w-6 h-6 bg-purple-500 text-white rounded-full text-xs hover:bg-purple-600 transition">+</button>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="font-semibold">${item.price * item.quantity}</span>
+              <button onclick="removeFromOrder(${index})" class="text-red-500 hover:text-red-700 p-1">
+                <i class="fas fa-trash text-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    // Add fade-in animation for sections on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Apply fade-in to sections
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+      });
+    });
+
+    // Add typing effect for hero title
+    function typeWriter(element, text, speed = 100) {
+      element.innerHTML = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Initialize typing effect
+    window.addEventListener('load', function() {
+      const heroTitle = document.querySelector('h1');
+      if (heroTitle) {
+        typeWriter(heroTitle, 'Andrómeda', 150);
+      }
+    });
+  </script>
 
 </body>
 </html>
