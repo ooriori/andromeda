@@ -1,4 +1,70 @@
-<!DOCTYPE html>
+<!-- Empanada Customization Modal -->
+  <div id="empanadaModal" class="modal">
+    <div class="modal-content">
+      <div class="gradient-bg p-6 rounded-t-2xl text-white">
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-bold">🥟 Personaliza tu Empanada</h3>
+          <button onclick="closeEmpanadaModal()" class="text-white hover:text-gray-300 text-2xl">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="p-6">
+        <p class="text-gray-600 mb-6 text-center">Elige tu ingrediente favorito (solo uno por empanada)</p>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('pollo', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🐔</div>
+              <h4 class="font-semibold">Pollo</h4>
+              <p class="text-sm text-gray-600">Pollo desmechado sazonado</p>
+            </div>
+          </div>
+          
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('jamon-queso', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🥓🧀</div>
+              <h4 class="font-semibold">Jamón y Queso</h4>
+              <p class="text-sm text-gray-600">Jamón dulce con queso</p>
+            </div>
+          </div>
+          
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('queso', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🧀</div>
+              <h4 class="font-semibold">Queso</h4>
+              <p class="text-sm text-gray-600">Queso derretido cremoso</p>
+            </div>
+          </div>
+          
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('pizza', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🍕</div>
+              <h4 class="font-semibold">Pizza</h4>
+              <p class="text-sm text-gray-600">Salsa, queso y orégano</p>
+            </div>
+          </div>
+          
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('carne', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🥩</div>
+              <h4 class="font-semibold">Carne</h4>
+              <p class="text-sm text-gray-600">Carne molida condimentada</p>
+            </div>
+          </div>
+          
+          <div class="ingredient-option border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectIngredient('vegetales', this)">
+            <div class="text-center">
+              <div class="text-3xl mb-2">🥬</div>
+              <h4 class="font-semibold">Vegetales</h4>
+              <p class="text-sm text-gray-600">Mix de vegetales frescos</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center space-y-4">
+          <div class="flex items-center justify-center space-x-4">
+            <label class="text-gray-700 font-semibold">Cantidad:</label><!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -189,8 +255,8 @@
             <div class="text-6xl mb-4">🥟</div>
             <h3 class="text-xl font-semibold mb-2">Empanadas</h3>
             <p class="text-gray-600 mb-4">Crujientes y doraditas, rellenas con los mejores ingredientes</p>
-            <button onclick="addToOrder('Empanadas', 50)" class="btn-primary text-white px-6 py-2 rounded-full">
-              <i class="fas fa-plus mr-2"></i>Agregar - $50
+            <button onclick="showEmpanadaModal()" class="btn-primary text-white px-6 py-2 rounded-full">
+              <i class="fas fa-plus mr-2"></i>Personalizar - $50
             </button>
           </div>
         </div>
@@ -317,6 +383,27 @@
     </div>
   </section>
 
+            <div class="flex items-center space-x-3">
+              <button type="button" onclick="changeEmpanadaQuantity(-1)" class="w-8 h-8 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition flex items-center justify-center">-</button>
+              <span id="empanadaQuantity" class="font-bold text-xl w-8 text-center">1</span>
+              <button type="button" onclick="changeEmpanadaQuantity(1)" class="w-8 h-8 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition flex items-center justify-center">+</button>
+            </div>
+          </div>
+          
+          <div class="text-lg font-semibold">
+            Total: $<span id="empanadaTotal">50</span>
+          </div>
+          
+          <button onclick="addEmpanadaToOrder()" id="addEmpanadaBtn" class="btn-primary text-white px-8 py-3 rounded-full text-lg font-semibold opacity-50 cursor-not-allowed" disabled>
+            <i class="fas fa-shopping-cart mr-2"></i>Agregar al pedido
+          </button>
+          
+          <p class="text-sm text-gray-500">* Selecciona un ingrediente para continuar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Order Modal -->
   <div id="orderModal" class="modal">
     <div class="modal-content">
@@ -428,6 +515,104 @@
   </div>
 
   <script>
+    // Empanada customization system
+    let selectedIngredient = null;
+    let empanadaQuantity = 1;
+    const empanadaPrice = 50;
+
+    function showEmpanadaModal() {
+      document.getElementById('empanadaModal').classList.add('show');
+      resetEmpanadaModal();
+    }
+
+    function closeEmpanadaModal() {
+      document.getElementById('empanadaModal').classList.remove('show');
+      resetEmpanadaModal();
+    }
+
+    function resetEmpanadaModal() {
+      selectedIngredient = null;
+      empanadaQuantity = 1;
+      document.getElementById('empanadaQuantity').textContent = '1';
+      document.getElementById('empanadaTotal').textContent = empanadaPrice;
+      
+      // Reset all ingredient selections
+      document.querySelectorAll('.ingredient-option').forEach(option => {
+        option.classList.remove('border-purple-500', 'bg-purple-50');
+        option.classList.add('border-gray-200');
+      });
+      
+      // Disable add button
+      const addBtn = document.getElementById('addEmpanadaBtn');
+      addBtn.disabled = true;
+      addBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    function selectIngredient(ingredient, element) {
+      // Remove selection from all options
+      document.querySelectorAll('.ingredient-option').forEach(option => {
+        option.classList.remove('border-purple-500', 'bg-purple-50');
+        option.classList.add('border-gray-200');
+      });
+      
+      // Add selection to clicked option
+      element.classList.remove('border-gray-200');
+      element.classList.add('border-purple-500', 'bg-purple-50');
+      
+      selectedIngredient = ingredient;
+      
+      // Enable add button
+      const addBtn = document.getElementById('addEmpanadaBtn');
+      addBtn.disabled = false;
+      addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+
+    function changeEmpanadaQuantity(change) {
+      empanadaQuantity += change;
+      if (empanadaQuantity < 1) empanadaQuantity = 1;
+      if (empanadaQuantity > 10) empanadaQuantity = 10; // Límite máximo
+      
+      document.getElementById('empanadaQuantity').textContent = empanadaQuantity;
+      document.getElementById('empanadaTotal').textContent = empanadaPrice * empanadaQuantity;
+    }
+
+    function addEmpanadaToOrder() {
+      if (!selectedIngredient) {
+        showNotification('Por favor selecciona un ingrediente', 'error');
+        return;
+      }
+
+      // Create ingredient display names
+      const ingredientNames = {
+        'pollo': 'Pollo',
+        'jamon-queso': 'Jamón y Queso',
+        'queso': 'Queso',
+        'pizza': 'Pizza',
+        'carne': 'Carne',
+        'vegetales': 'Vegetales'
+      };
+
+      const itemName = `Empanada de ${ingredientNames[selectedIngredient]}`;
+      
+      // Check if this exact empanada type already exists in order
+      const existingItem = currentOrder.find(order => order.name === itemName);
+      if (existingItem) {
+        existingItem.quantity += empanadaQuantity;
+      } else {
+        currentOrder.push({ 
+          name: itemName, 
+          price: empanadaPrice, 
+          quantity: empanadaQuantity,
+          type: 'empanada',
+          ingredient: selectedIngredient
+        });
+      }
+      
+      updateOrderTotal();
+      closeEmpanadaModal();
+      showNotification(`${empanadaQuantity} ${itemName}${empanadaQuantity > 1 ? 's' : ''} agregada${empanadaQuantity > 1 ? 's' : ''} al pedido`);
+    }
+
     // Order system
     let currentOrder = [];
     let orderTotal = 0;
@@ -596,6 +781,10 @@
         
         if (message.toLowerCase().includes('horario')) {
           botResponse = "🕐 Nuestros horarios son: Mañana 7:00 AM - 12:00 PM y Tarde 2:00 PM - 9:00 PM";
+        } else if (message.toLowerCase().includes('empanada')) {
+          botResponse = "🥟 ¡Nuestras empanadas son especiales! Puedes elegir entre: Pollo, Jamón y Queso, Queso, Pizza, Carne o Vegetales. ¡Todas a $50!";
+        } else if (message.toLowerCase().includes('ingrediente')) {
+          botResponse = "👨‍🍳 Para las empanadas ofrecemos: Pollo desmechado, Jamón y Queso, Queso derretido, Pizza (salsa y queso), Carne molida y Vegetales frescos.";
         } else if (message.toLowerCase().includes('precio')) {
           botResponse = "💰 Nuestros precios van desde $30 los yaniqueques hasta $120 los desayunos completos. ¿Te interesa algo en particular?";
         } else if (message.toLowerCase().includes('delivery') || message.toLowerCase().includes('entrega')) {
@@ -637,12 +826,16 @@
     window.addEventListener('click', function(e) {
       const orderModal = document.getElementById('orderModal');
       const adminModal = document.getElementById('adminModal');
+      const empanadaModal = document.getElementById('empanadaModal');
       
       if (e.target === orderModal) {
         closeOrderModal();
       }
       if (e.target === adminModal) {
         closeAdminModal();
+      }
+      if (e.target === empanadaModal) {
+        closeEmpanadaModal();
       }
     });
 
